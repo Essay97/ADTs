@@ -1,20 +1,20 @@
 #include <stdio.h>
 
 #include "item.h"
-#include "queue/queue.h"
+#include "stack/stack.h"
 
 int main(void) {
-	Queue q = QUEUEnew(&ITEMdelete, ITEMsize());
+	Stack s = STACKnew(&ITEMdelete, ITEMsize());
 	int i;
 	Item item;
 
-	QUEUEenqueue(q, ITEMnew(4));
-	QUEUEenqueue(q, ITEMnew(8));
+	STACKpush(s, ITEMnew(17));
+	STACKpush(s, ITEMnew(88));
 
-	while (!QUEUEisEmpty(q))
+	while (!STACKisEmpty(s))
 	{
-		item = (Item)QUEUEdequeue(&ITEMcopy, q);
-		printf("DEQUEUED %d\n", ITEMget(item));
+		item = (Item)STACKpop(&ITEMcopy, s);
+		printf("POPPED %d\n", ITEMget(item));
 	}
 
   return 0;

@@ -13,7 +13,7 @@ void QUEUEdelete(Queue q) {
 	LISTdelete(q);
 }
 
-void QUEUEenqueue(Queue q, Item x) {
+void QUEUEenqueue(Queue q, void *x) {
 	LISTinsertTail(q, x);
 }
 
@@ -24,7 +24,6 @@ void * QUEUEdequeue(void * (*copy)(void *), Queue q) {
 	}
 
 	void *x = LISTcopyItem(copy, q, 0);
-	printf("TESTING VALUE: %d\n", ITEMget((Item)x));
 	LISTdeleteHead(q);
 	return x;
 }
