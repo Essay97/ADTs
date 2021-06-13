@@ -26,8 +26,16 @@ size_t ITEMsize(void) {
 	return sizeof(struct Item_T);
 }
 
+void * ITEMcopy(void *i) {
+	return ITEMnew(ITEMget(i));
+}
+
 //GETTERS AND SETTERS
 
 int ITEMget(Item i) {
 	return i->x;
+}
+
+void ITEMset(Item i, int newVal) {
+	i->x = newVal;
 }

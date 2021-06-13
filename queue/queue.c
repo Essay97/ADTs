@@ -3,29 +3,29 @@
 #include "../list/list.h"
 #include "queue.h"
 
-Queue QUEUEnew(void) {
+Queue QUEUEnew(void (*destroy)(void *), size_t size) {
 	Queue q;
-	q = LISTnew();
+	q = LISTnew(destroy, size);
 	return q;
 }
 
-void QUEUEdelete(void (*destroy)(void *), Queue q) {
-	LISTdelete(destroy, q);
+void QUEUEdelete(Queue q) {
+	LISTdelete(q);
 }
 
-void QUEUEenqueue(Queue q, Item x, size_t size) {
-	LISTinsertTail(q, x, size);
+void QUEUEenqueue(Queue q, Item x) {
+	LISTinsertTail(q, x);
 }
 
-void * QUEUEdequeue(void (*destroy)(void *), Queue q) {
+void * QUEUEdequeue(void * (*copy)(void *), Queue q) {
 	if(LISTgetCount(q) == 0) {
 		fprintf(stderr, "Queue is empty!");
 		exit(-1);
 	}
 
-	void *x = LISTgetItem(q, 0);
+	void *x = LISTcopyItem(copy, q, 0);
 	printf("TESTING VALUE: %d\n", ITEMget((Item)x));
-	LISTdeleteHead(destroy, q);
+	LISTdeleteHead(q);
 	return x;
 }
 

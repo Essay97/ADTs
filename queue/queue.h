@@ -7,13 +7,12 @@
 
 typedef List Queue;
 
-Queue QUEUEnew(void);
+Queue QUEUEnew(void (*destroy)(void *), size_t size);
+void QUEUEdelete( Queue q);
 
-void QUEUEdelete(void (*destroy)(void *), Queue q);
+void QUEUEenqueue(Queue q, Item x);
 
-void QUEUEenqueue(Queue q, Item x, size_t size);
-
-void * QUEUEdequeue(void (*destroy)(void *), Queue q);
+void * QUEUEdequeue(void * (*copy)(void *), Queue q);
 
 bool QUEUEisEmpty(Queue q);
 
