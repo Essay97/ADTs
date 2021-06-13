@@ -21,12 +21,34 @@ static void deleteTree(BTNode n) {
 }
 
 static void insertNode(BTNode n, BTNode newNode) {
+	BTNode tmp;
+
 	if(BTNODEisLeaf(n)) {
-		BTNODEcompare(n, newNode) <= 0 ? BTNODEsetLeft(n, newNode) : BTNODEsetRight(n, newNode);
+		if(BTNODEcompare(newNode, n) <= 0) {
+			BTNODEsetLeft(n, newNode);
+		} else {
+			BTNODEsetRight(n, newNode);
+		}
 		return; 
 	}
 
-	BTNODEcompare(n, newNode) <= 0 ? insertNode(BTNODEgetLeft(n), newNode) : insertNode(BTNODEgetLeft(n), newNode); 
+	if(BTNODEcompare(newNode, n) <= 0) {
+		tmp = BTNODEgetLeft(n);
+		if(tmp != NULL) {
+			insertNode(tmp, newNode);
+		} else {
+			BTNODEsetLeft(n, newNode);
+			return;
+		}
+	} else {
+		tmp = BTNODEgetRight(n);
+		if(tmp != NULL) {
+			insertNode(tmp, newNode);
+		} else {
+			BTNODEsetRight(n, newNode);
+			return;
+		}
+	}
 }
 
 static void inorder(BTNode n) {
@@ -91,14 +113,32 @@ void BSTinsert(BST t, int x) {
 }
 
 void BSTprintInorder(BST t) {
-	inorder(t->head);
+	if(t->head == NULL) {
+		printf("Empty tree\n");
+	} else {
+		inorder(t->head);
+	}
 }
 
 void BSTprintPreorder(BST t) {
-	preorder(t->head);
+	if(t->head == NULL) {
+		printf("Empty tree\n");
+	} else {
+		preorder(t->head);
+	}
 }
 
 void BSTprintPostorder(BST t) {
-	postorder(t->head);
+	if(t->head == NULL) {
+		printf("Empty tree\n");
+	} else {
+		postorder(t->head);
+	}
 }
 
+//GETTERS AND SETTERS
+
+//Debug
+BTNode getHead(BST t) {
+	return t->head;
+}
