@@ -3,20 +3,21 @@
 #include "node.h"
 
 struct Node_T {
-	Item c;
+	void *x;
 	Node next;
 };
 
-Node NODEnew(int x) {
+Node NODEnew(void *data, size_t size) {
 	Node n;
 	n = (Node)malloc(sizeof(struct Node_T));
-	n->c = ITEMnew(x);
+	n->x = malloc(size);
+	n->x = data;
 	n->next = NULL;
 	return n;
 }
 
-void NODEdelete(Node n) {
-	ITEMdelete(n->c);
+void NODEdelete(void (*destroy)(void *), Node n) {
+	(*destroy)(n->x); 
 	n->next = NULL;
 	free(n);
 }
@@ -31,6 +32,6 @@ Node NODEgetNext(Node n) {
 	return n->next;
 }
 
-int NODEgetItem(Node n) {
-	return ITEMget(n->c);
+void * NODEgetData(Node n) {
+	return n->x;
 }

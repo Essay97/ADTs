@@ -1,30 +1,33 @@
 #include <stdio.h>
 
 #include "BST/BST.h"
+#include "item.h"
+#include "list/list.h"
 
 int main(void) {
-	BST t = BSTnew();
-	int item;
+	List l = LISTnew();
+	size_t itemSize = ITEMsize();
+	int i, listCount;
+	Item item;
 
-	printf("TEST THIS\n");
+	LISTinsertHead(l, ITEMnew(5), itemSize);
+	LISTinsertHead(l, ITEMnew(48), itemSize);
 
-	BSTprintInorder(t);
+	listCount = LISTgetCount(l);
 
-	BSTinsert(t, 100);
-	BSTinsert(t, 20);	
-	BSTinsert(t, 10);
-	BSTinsert(t, 30);
-	BSTinsert(t, 200);
-	BSTinsert(t, 150);
-	BSTinsert(t, 300);
+	for(i = 0; i < listCount; i++) {
+		item = LISTgetItem(l, i);
+		printf("ELEMENT: %d\n", ITEMget(item));
+	}
 
-	BSTprintInorder(t);
+	LISTdeleteHead(&ITEMdelete, l);
+	for(i = 0; i < listCount; i++) {
+		item = LISTgetItem(l, i);
+		printf("ELEMENT: %d\n", ITEMget(item));
+	}
 
-	printf("end\n");
-	
-	//LET THE PROGRAM OPEN
-	printf("Press a key to close.\n");
-	getchar();
+
+
 
   return 0;
 }

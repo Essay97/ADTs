@@ -14,12 +14,16 @@ Item ITEMnew(int n) {
 	return i;
 }
 
-void ITEMdelete(Item i) {
+void ITEMdelete(void *i) {
 	free(i);
 }
 
 int ITEMcompare(Item a, Item b) {
 	return a->x - b->x;
+}
+
+size_t ITEMsize(void) {
+	return sizeof(struct Item_T);
 }
 
 //GETTERS AND SETTERS

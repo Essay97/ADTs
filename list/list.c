@@ -16,20 +16,20 @@ List LISTnew(void) {
 	return l;
 }
 
-void LISTdelete(List l) {
+void LISTdelete(void (*destroy)(void *), List l) {
 	Node tmp;
 	while(l->head != NULL) {
 		tmp = l->head;
 		l->head = NODEgetNext(l->head);
-		NODEdelete(tmp);
+		NODEdelete(destroy, tmp);
 	}
 	free(l);
 }
 
-void LISTinsertTail(List l, int x) {
+void LISTinsertTail(List l, void *data, size_t size) {
 	Node curr = l->head;
 	Node prev = NULL;
-	Node newNode = NODEnew(x);
+	Node newNode = NODEnew(data, size);
 
 	//navigate to the end of the list
 	while(curr != NULL) {
@@ -45,17 +45,17 @@ void LISTinsertTail(List l, int x) {
 	(l->count)++;
 }
 
-void LISTinsertHead(List l, int x) {
+void LISTinsertHead(List l, void *data, size_t size) {
 	Node tmp = l->head;
-	l->head = NODEnew(x);
+	l->head = NODEnew(data, size);
 	NODEsetNext(l->head, tmp);
 	(l->count)++;
 }
 
-void LISTinsertPos(List l, int pos, int x) {
+void LISTinsertPos(List l, int pos, void *data, size_t size) {
 	Node curr = l->head;
 	Node prev = NULL;
-	Node newNode = NODEnew(x);
+	Node newNode = NODEnew(data, size);
 
 	if(pos < 0 || pos >= l->count) {
 		fprintf(stderr, "Position is not valid!\n");
@@ -69,7 +69,7 @@ void LISTinsertPos(List l, int pos, int x) {
 	}
 
 	if(prev == NULL) {
-		LISTinsertHead(l, x);
+		LISTinsertHead(l, data, size);
 	} else {
 		NODEsetNext(prev, newNode);
 		NODEsetNext(newNode, curr);
@@ -78,7 +78,7 @@ void LISTinsertPos(List l, int pos, int x) {
 	(l->count)++;
 }
 
-void LISTdeleteTail(List l) {
+void LISTdeleteTail(void (*destroy)(void *), List l) {
 	Node curr = l->head;
 	Node prev = NULL, sec_prev = NULL;
 
@@ -94,17 +94,17 @@ void LISTdeleteTail(List l) {
 	}
 
 	if(sec_prev != NULL) {
-		NODEdelete(prev);
+		NODEdelete(destroy, prev);
 		NODEsetNext(sec_prev, NULL);
 		(l->count)--;
 	} else if(prev != NULL) {
-		NODEdelete(prev);
+		NODEdelete(destroy, prev);
 		l->head = NULL;
 		(l->count)--;
 	}
 }
 
-void LISTdeleteHead(List l) {
+void LISTdeleteHead(void (*destroy)(void *), List l) {
 	Node tmp;
 	
 	if(l->head == NULL) {
@@ -114,13 +114,13 @@ void LISTdeleteHead(List l) {
 	
 	if(l->head != NULL) {
 		tmp = NODEgetNext(l->head);
-		NODEdelete(l->head);
+		NODEdelete(destroy, l->head);
 		l->head = tmp;
 		(l->count)--;
 	}
 }
 
-void LISTdeletePos(List l, int pos) {
+void LISTdeletePos(void (*destroy)(void *), List l, int pos) {
 	Node curr = l->head;
 	Node prev = NULL;
 	Node tmp;
@@ -138,12 +138,12 @@ void LISTdeletePos(List l, int pos) {
 
 	tmp = NODEgetNext(curr);
 	NODEsetNext(prev, tmp);
-	NODEdelete(curr);
+	NODEdelete(destroy, curr);
 
 	(l->count)--;
 }
 
-void LISTprint(List l) {
+/* void LISTprint(List l) {
 	Node n = l->head;
 
 	if(l->head == NULL) {
@@ -154,7 +154,7 @@ void LISTprint(List l) {
 		n = NODEgetNext(n);
 	}
 	}
-}
+} */
 
 //GETTERS AND SETTERS
 
@@ -162,12 +162,12 @@ int LISTgetCount(List l) {
 	return l->count;
 }
 
-int LISTgetItem(List l, int pos) {
+void * LISTgetItem(List l, int pos) {
 	Node curr = l->head;
 
 	while(pos > 0) {
 		curr = NODEgetNext(curr);
 		pos--;
 	}
-	return NODEgetItem(curr);
+	return NODEgetData(curr);
 }
