@@ -1,12 +1,12 @@
 #include <stdio.h>
 
 #include "BST/BST.h"
-#include "BST/btnode.h"
 
 int main(void) {
 	BST t = BSTnew();
-	BTNode n;
 	int item;
+
+	printf("TEST THIS\n");
 
 	BSTprintInorder(t);
 
@@ -22,5 +22,9 @@ int main(void) {
 
 	printf("end\n");
 	
+	//LET THE PROGRAM OPEN
+	printf("Press a key to close.\n");
+	getchar();
+
   return 0;
 }
