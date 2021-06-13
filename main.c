@@ -1,30 +1,27 @@
 #include <stdio.h>
 
-#include "BST/BST.h"
 #include "item.h"
-#include "list/list.h"
+#include "queue/queue.h"
+
+/* TODO It should be possible to pass the destructor and the size only once, when the data structure is instantiated, 
+store them inside the data structure and then always take it from there */
 
 int main(void) {
-	List l = LISTnew();
+	Queue q = QUEUEnew();
 	size_t itemSize = ITEMsize();
-	int i, listCount;
+	int i;
 	Item item;
 
-	LISTinsertHead(l, ITEMnew(5), itemSize);
-	LISTinsertHead(l, ITEMnew(48), itemSize);
+	QUEUEenqueue(q, ITEMnew(4), itemSize);
+	QUEUEenqueue(q, ITEMnew(8), itemSize);
 
-	listCount = LISTgetCount(l);
-
-	for(i = 0; i < listCount; i++) {
-		item = LISTgetItem(l, i);
-		printf("ELEMENT: %d\n", ITEMget(item));
+	while (!QUEUEisEmpty(q))
+	{
+		item = (Item)QUEUEdequeue(&ITEMdelete, q);
+		printf("DEQUEUED %d\n", ITEMget(item));
 	}
+	
 
-	LISTdeleteHead(&ITEMdelete, l);
-	for(i = 0; i < listCount; i++) {
-		item = LISTgetItem(l, i);
-		printf("ELEMENT: %d\n", ITEMget(item));
-	}
 
 
 

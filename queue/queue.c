@@ -9,22 +9,23 @@ Queue QUEUEnew(void) {
 	return q;
 }
 
-void QUEUEdelete(Queue q) {
-	LISTdelete(q);
+void QUEUEdelete(void (*destroy)(void *), Queue q) {
+	LISTdelete(destroy, q);
 }
 
-void QUEUEenqueue(Queue q, int x) {
-	LISTinsertTail(q, x);
+void QUEUEenqueue(Queue q, Item x, size_t size) {
+	LISTinsertTail(q, x, size);
 }
 
-int QUEUEdequeue(Queue q) {
+void * QUEUEdequeue(void (*destroy)(void *), Queue q) {
 	if(LISTgetCount(q) == 0) {
-		fprintf(stderr, "Stack is empty!");
+		fprintf(stderr, "Queue is empty!");
 		exit(-1);
 	}
 
-	int x = LISTgetItem(q, 0);
-	LISTdeleteHead(q);
+	void *x = LISTgetItem(q, 0);
+	printf("TESTING VALUE: %d\n", ITEMget((Item)x));
+	LISTdeleteHead(destroy, q);
 	return x;
 }
 
