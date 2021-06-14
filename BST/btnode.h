@@ -5,13 +5,13 @@
 
 typedef struct BTNode_T *BTNode;
 
-BTNode BTNODEnew(int x);
+BTNode BTNODEnew(void *data, size_t size);
 
-void BTNODEdelete(BTNode n);
+void BTNODEdelete(void (*destroy)(void *), BTNode n);
 
 bool BTNODEisLeaf(BTNode n);
 
-int BTNODEcompare(BTNode a, BTNode b);
+int BTNODEcompare(int (*cmp)(void *, void *), BTNode a, BTNode b);
 
 // GETTERS AND SETTERS
 
@@ -23,6 +23,6 @@ void BTNODEsetLeft(BTNode n, BTNode newNode);
 
 void BTNODEsetRight(BTNode n, BTNode newNode);
 
-int BTNODEgetItem(BTNode n);
+void * BTNODEgetData(BTNode n);
 
 #endif 

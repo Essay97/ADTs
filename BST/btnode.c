@@ -4,24 +4,25 @@
 #include "../item.h"
 
 struct BTNode_T {
-	Item i;
+	void *x;
 	BTNode left;
 	BTNode right;
 };
 
-BTNode BTNODEnew(int x) {
+BTNode BTNODEnew(void *x, size_t size) {
 	BTNode n;
 	n = (BTNode)malloc(sizeof(struct BTNode_T));
 
-	n->i = ITEMnew(x);
+	n->x = malloc(size);
+	n->x = x;
 	n->right = NULL;
 	n->left = NULL;
 
 	return n;
 }
 
-void BTNODEdelete(BTNode n) {
-	ITEMdelete(n->i);
+void BTNODEdelete(void (*destroy)(void *), BTNode n) {
+	(*destroy)(n->x);
 	n->right = NULL;
 	n->left = NULL;
 
@@ -32,8 +33,8 @@ bool BTNODEisLeaf(BTNode n) {
 	return (n->left == NULL && n->right == NULL);
 }
 
-int BTNODEcompare(BTNode a, BTNode b) {
-	return ITEMcompare(a->i, b->i);
+int BTNODEcompare(int (*cmp)(void *, void *), BTNode a, BTNode b) {
+	return (*cmp)(a->x, b->x);
 }
 
 //GETTERS AND SETTERS 
@@ -54,6 +55,6 @@ void BTNODEsetRight(BTNode n, BTNode newNode) {
 	n->right = newNode;
 }
 
-int BTNODEgetItem(BTNode n) {
-	return ITEMget(n->i);
+void * BTNODEgetData(BTNode n) {
+	return n->x;
 }
