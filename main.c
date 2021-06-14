@@ -1,21 +1,22 @@
 #include <stdio.h>
 
 #include "item.h"
-#include "stack/stack.h"
+#include "BST/BST.h"
 
 int main(void) {
-	Stack s = STACKnew(&ITEMdelete, ITEMsize());
-	int i;
-	Item item;
+	BST t;
+	
+	t = BSTnew(&ITEMdelete, &ITEMcompare);
+	BSTinsert(t, ITEMnew(5));
+	BSTinsert(t, ITEMnew(44));
+	BSTinsert(t, ITEMnew(89));
+	BSTinsert(t, ITEMnew(66));
 
-	STACKpush(s, ITEMnew(17));
-	STACKpush(s, ITEMnew(88));
+	BSTprintInorder(&ITEMstring, t);
+	printf("end\n");
 
-	while (!STACKisEmpty(s))
-	{
-		item = (Item)STACKpop(&ITEMcopy, s);
-		printf("POPPED %d\n", ITEMget(item));
-	}
+	printf("L M A O\n");
 
+	printf("HEEEEEEEEY");
   return 0;
 }
