@@ -1,26 +1,21 @@
 #include <stdio.h>
 
+#include "item.h"
 #include "BST/BST.h"
-#include "BST/btnode.h"
 
 int main(void) {
-	BST t = BSTnew();
-	BTNode n;
-	int item;
-
-	BSTprintInorder(t);
-
-	BSTinsert(t, 100);
-	BSTinsert(t, 20);	
-	BSTinsert(t, 10);
-	BSTinsert(t, 30);
-	BSTinsert(t, 200);
-	BSTinsert(t, 150);
-	BSTinsert(t, 300);
-
-	BSTprintInorder(t);
-
-	printf("end\n");
+	BST t;
 	
+	t = BSTnew(&ITEMdelete, &ITEMcompare);
+	BSTinsert(t, ITEMnew(50));
+	BSTinsert(t, ITEMnew(44));
+	BSTinsert(t, ITEMnew(89));
+	BSTinsert(t, ITEMnew(11));	
+
+	BSTprintPreorder(&ITEMstring, t);
+	
+	BSTdelete(t);
+	t = BSTnew(&ITEMdelete, &ITEMcompare);
+	BSTprintPreorder(&ITEMstring, t);
   return 0;
 }

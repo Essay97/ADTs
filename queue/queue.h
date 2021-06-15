@@ -3,16 +3,16 @@
 
 #include <stdbool.h>
 #include "../list/list.h"
+#include "../item.h"
 
 typedef List Queue;
 
-Queue QUEUEnew(void);
+Queue QUEUEnew(void (*destroy)(void *), size_t size);
+void QUEUEdelete( Queue q);
 
-void QUEUEdelete(Queue q);
+void QUEUEenqueue(Queue q, void *x);
 
-void QUEUEenqueue(Queue q, int x);
-
-int QUEUEdequeue(Queue q);
+void * QUEUEdequeue(void * (*copy)(void *), Queue q);
 
 bool QUEUEisEmpty(Queue q);
 

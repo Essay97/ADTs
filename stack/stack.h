@@ -7,13 +7,13 @@
 
 typedef List Stack;
 
-Stack STACKnew(void);
+Stack STACKnew(void (*destroy)(void *), size_t size);
 
 void STACKdelete(Stack s);
 
-void STACKpush(Stack s, int x);
+void STACKpush(Stack s, void *x);
 
-int STACKpop(Stack s);
+void * STACKpop(void * (*copy)(void *), Stack s);
 
 bool STACKisEmpty(Stack s);
 

@@ -3,9 +3,9 @@
 #include "../list/list.h"
 #include "queue.h"
 
-Queue QUEUEnew(void) {
+Queue QUEUEnew(void (*destroy)(void *), size_t size) {
 	Queue q;
-	q = LISTnew();
+	q = LISTnew(destroy, size);
 	return q;
 }
 
@@ -13,17 +13,17 @@ void QUEUEdelete(Queue q) {
 	LISTdelete(q);
 }
 
-void QUEUEenqueue(Queue q, int x) {
+void QUEUEenqueue(Queue q, void *x) {
 	LISTinsertTail(q, x);
 }
 
-int QUEUEdequeue(Queue q) {
+void * QUEUEdequeue(void * (*copy)(void *), Queue q) {
 	if(LISTgetCount(q) == 0) {
-		fprintf(stderr, "Stack is empty!");
+		fprintf(stderr, "Queue is empty!");
 		exit(-1);
 	}
 
-	int x = LISTgetItem(q, 0);
+	void *x = LISTcopyItem(copy, q, 0);
 	LISTdeleteHead(q);
 	return x;
 }

@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <stdio.h>
+
 #include "item.h"
 
 struct Item_T {
@@ -14,16 +16,35 @@ Item ITEMnew(int n) {
 	return i;
 }
 
-void ITEMdelete(Item i) {
+void ITEMdelete(void *i) {
 	free(i);
 }
 
-int ITEMcompare(Item a, Item b) {
-	return a->x - b->x;
+int ITEMcompare(void *a, void *b) {
+	return ((Item)a)->x - ((Item)b)->x;
+}
+
+size_t ITEMsize(void) {
+	return sizeof(struct Item_T);
+}
+
+void * ITEMcopy(void *i) {
+	return ITEMnew(ITEMget(i));
+}
+
+char * ITEMstring(void *i) {
+	char *str;
+	str = (char *)malloc(30*sizeof(char));
+	sprintf(str, "%d", ((Item)i)->x);
+	return str;
 }
 
 //GETTERS AND SETTERS
 
 int ITEMget(Item i) {
 	return i->x;
+}
+
+void ITEMset(Item i, int newVal) {
+	i->x = newVal;
 }

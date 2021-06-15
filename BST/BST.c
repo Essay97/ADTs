@@ -5,26 +5,37 @@
 
 struct BST_T {
 	BTNode head;
+	void (*destructor)(void *);
+	int (*compare)(void *, void *);
+	size_t size;
 };
 
 //PRIVATE FUNCTIONS
-static void deleteTree(BTNode n) {
+static void deleteTree(void (*destructor)(void *), BTNode n) {
+	BTNode left, right;
+
 	if(BTNODEisLeaf(n)) {
-		BTNODEdelete(n);
+		BTNODEdelete(destructor, n);
 		return;
 	}
 
-	deleteTree(BTNODEgetLeft(n));
-	deleteTree(BTNODEgetRight(n));
+	left = BTNODEgetLeft(n);
+	right = BTNODEgetRight(n);
+	if(left != NULL) {
+		deleteTree(destructor, BTNODEgetLeft(n));
+	}
+	if(right != NULL) {
+		deleteTree(destructor, BTNODEgetRight(n));
+	}
 
-	BTNODEdelete(n);
+	BTNODEdelete(destructor, n);
 }
 
-static void insertNode(BTNode n, BTNode newNode) {
+static void insertNode(int (*compare)(void *, void *), BTNode n, BTNode newNode) {
 	BTNode tmp;
 
 	if(BTNODEisLeaf(n)) {
-		if(BTNODEcompare(newNode, n) <= 0) {
+		if(BTNODEcompare(compare, newNode, n) <= 0) {
 			BTNODEsetLeft(n, newNode);
 		} else {
 			BTNODEsetRight(n, newNode);
@@ -32,10 +43,10 @@ static void insertNode(BTNode n, BTNode newNode) {
 		return; 
 	}
 
-	if(BTNODEcompare(newNode, n) <= 0) {
+	if(BTNODEcompare(compare, newNode, n) <= 0) {
 		tmp = BTNODEgetLeft(n);
 		if(tmp != NULL) {
-			insertNode(tmp, newNode);
+			insertNode(compare, tmp, newNode);
 		} else {
 			BTNODEsetLeft(n, newNode);
 			return;
@@ -43,7 +54,7 @@ static void insertNode(BTNode n, BTNode newNode) {
 	} else {
 		tmp = BTNODEgetRight(n);
 		if(tmp != NULL) {
-			insertNode(tmp, newNode);
+			insertNode(compare, tmp, newNode);
 		} else {
 			BTNODEsetRight(n, newNode);
 			return;
@@ -51,88 +62,116 @@ static void insertNode(BTNode n, BTNode newNode) {
 	}
 }
 
-static void inorder(BTNode n) {
+static void inorder(char * (*toString)(void *), BTNode n) {
+	BTNode left, right;
+	
 	if(BTNODEisLeaf(n)) {
-		printf("%d\n", BTNODEgetItem(n));
+		printf("%s\n", toString(BTNODEgetData(n)));
 		return;
 	}
 
-	inorder(BTNODEgetLeft(n));
-	printf("%d\n", BTNODEgetItem(n));
-	inorder(BTNODEgetRight(n));
+	left = BTNODEgetLeft(n);
+	right = BTNODEgetRight(n);
+	if(left != NULL) {
+		inorder(toString, left);
+	}
+	printf("%s\n", toString(BTNODEgetData(n)));
+	if(right != NULL) {
+		inorder(toString, right);
+	}
+	
 }
 
-static void preorder(BTNode n) {
+static void preorder(char * (*toString)(void *), BTNode n) {
+	BTNode left, right;
+
 	if(BTNODEisLeaf(n)) {
-		printf("%d\n", BTNODEgetItem(n));
+		printf("%s\n", toString(BTNODEgetData(n)));
 		return;
 	}
 
-	printf("%d\n", BTNODEgetItem(n));
-	preorder(BTNODEgetLeft(n));
-	preorder(BTNODEgetRight(n));
+	left = BTNODEgetLeft(n);
+	right = BTNODEgetRight(n);
+	printf("%s\n", toString(BTNODEgetData(n)));
+	if(left != NULL) {
+		preorder(toString, left);
+	}
+	if(right != NULL) {
+		preorder(toString, right);
+	}
 }
 
-static void postorder(BTNode n) {
+static void postorder(char * (*toString)(void *), BTNode n) {
+	BTNode left, right;
+	
 	if(BTNODEisLeaf(n)) {
-		printf("%d\n", BTNODEgetItem(n));
+		printf("%s\n", toString(BTNODEgetData(n)));
 		return;
 	}
 
-	postorder(BTNODEgetLeft(n));
-	postorder(BTNODEgetRight(n));
-	printf("%d\n", BTNODEgetItem(n));
+	left = BTNODEgetLeft(n);
+	right = BTNODEgetRight(n);
+	if(left != NULL) {
+		postorder(toString, left);
+	}
+	if(right != NULL) {
+		postorder(toString, right);
+	}
+	printf("%s\n", toString(BTNODEgetData(n)));
 }
 
 
 //PUBLIC FUNCTIONS
 
-BST BSTnew(void) {
+BST BSTnew(void (*destroy)(void *), int (*cmp)(void *, void *)) {
 	BST t;
 
 	t = (BST)malloc(sizeof(struct BST_T));
 	t->head = NULL;
+	t->destructor = destroy;
+	t->compare = cmp;
 
 	return t;
 }
 
 void BSTdelete(BST t) {
-	deleteTree(t->head);
+	deleteTree(t->destructor, t->head);
 	free(t);
 }
 
-void BSTinsert(BST t, int x) {
-	BTNode newNode = BTNODEnew(x);
+void BSTinsert(BST t, void *data) {
+	BTNode newNode = BTNODEnew(data, t->size);
 	
 	if(t->head == NULL) {
 		t->head = newNode;
 	} else {
-		insertNode(t->head, newNode);
+		insertNode(t->compare, t->head, newNode);
 	}
 	
 }
 
-void BSTprintInorder(BST t) {
+
+void BSTprintInorder(char * (*toString)(void *), BST t) {
 	if(t->head == NULL) {
 		printf("Empty tree\n");
 	} else {
-		inorder(t->head);
+		inorder(toString, t->head);
 	}
 }
 
-void BSTprintPreorder(BST t) {
+void BSTprintPreorder(char * (*toString)(void *), BST t) {
 	if(t->head == NULL) {
 		printf("Empty tree\n");
 	} else {
-		preorder(t->head);
+		preorder(toString, t->head);
 	}
 }
 
-void BSTprintPostorder(BST t) {
+void BSTprintPostorder(char * (*toString)(void *), BST t) {
 	if(t->head == NULL) {
 		printf("Empty tree\n");
 	} else {
-		postorder(t->head);
+		postorder(toString, t->head);
 	}
 }
 
