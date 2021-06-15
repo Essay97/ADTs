@@ -7,16 +7,15 @@ int main(void) {
 	BST t;
 	
 	t = BSTnew(&ITEMdelete, &ITEMcompare);
-	BSTinsert(t, ITEMnew(5));
+	BSTinsert(t, ITEMnew(50));
 	BSTinsert(t, ITEMnew(44));
 	BSTinsert(t, ITEMnew(89));
-	BSTinsert(t, ITEMnew(66));
+	BSTinsert(t, ITEMnew(11));	
 
-	BSTprintInorder(&ITEMstring, t);
-	printf("end\n");
-
-	printf("L M A O\n");
-
-	printf("HEEEEEEEEY");
+	BSTprintPreorder(&ITEMstring, t);
+	
+	BSTdelete(t);
+	t = BSTnew(&ITEMdelete, &ITEMcompare);
+	BSTprintPreorder(&ITEMstring, t);
   return 0;
 }

@@ -34,6 +34,7 @@ void * ITEMcopy(void *i) {
 
 char * ITEMstring(void *i) {
 	char *str;
+	str = (char *)malloc(30*sizeof(char));
 	sprintf(str, "%d", ((Item)i)->x);
 	return str;
 }

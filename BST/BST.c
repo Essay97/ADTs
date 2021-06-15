@@ -12,13 +12,21 @@ struct BST_T {
 
 //PRIVATE FUNCTIONS
 static void deleteTree(void (*destructor)(void *), BTNode n) {
+	BTNode left, right;
+
 	if(BTNODEisLeaf(n)) {
 		BTNODEdelete(destructor, n);
 		return;
 	}
 
-	deleteTree(destructor, BTNODEgetLeft(n));
-	deleteTree(destructor, BTNODEgetRight(n));
+	left = BTNODEgetLeft(n);
+	right = BTNODEgetRight(n);
+	if(left != NULL) {
+		deleteTree(destructor, BTNODEgetLeft(n));
+	}
+	if(right != NULL) {
+		deleteTree(destructor, BTNODEgetRight(n));
+	}
 
 	BTNODEdelete(destructor, n);
 }
@@ -55,37 +63,61 @@ static void insertNode(int (*compare)(void *, void *), BTNode n, BTNode newNode)
 }
 
 static void inorder(char * (*toString)(void *), BTNode n) {
+	BTNode left, right;
+	
 	if(BTNODEisLeaf(n)) {
 		printf("%s\n", toString(BTNODEgetData(n)));
 		return;
 	}
 
-	inorder(toString, BTNODEgetLeft(n));
-	printf("test inorder\n");
+	left = BTNODEgetLeft(n);
+	right = BTNODEgetRight(n);
+	if(left != NULL) {
+		inorder(toString, left);
+	}
 	printf("%s\n", toString(BTNODEgetData(n)));
-	inorder(toString, BTNODEgetRight(n));
+	if(right != NULL) {
+		inorder(toString, right);
+	}
+	
 }
 
 static void preorder(char * (*toString)(void *), BTNode n) {
+	BTNode left, right;
+
 	if(BTNODEisLeaf(n)) {
 		printf("%s\n", toString(BTNODEgetData(n)));
 		return;
 	}
 
-	printf("%s\n", BTNODEgetData(n));
-	preorder(toString, BTNODEgetLeft(n));
-	preorder(toString, BTNODEgetRight(n));
+	left = BTNODEgetLeft(n);
+	right = BTNODEgetRight(n);
+	printf("%s\n", toString(BTNODEgetData(n)));
+	if(left != NULL) {
+		preorder(toString, left);
+	}
+	if(right != NULL) {
+		preorder(toString, right);
+	}
 }
 
 static void postorder(char * (*toString)(void *), BTNode n) {
+	BTNode left, right;
+	
 	if(BTNODEisLeaf(n)) {
-		printf("%s\n", BTNODEgetData(n));
+		printf("%s\n", toString(BTNODEgetData(n)));
 		return;
 	}
 
-	postorder(toString, BTNODEgetLeft(n));
-	postorder(toString, BTNODEgetRight(n));
-	printf("%s\n", BTNODEgetData(n));
+	left = BTNODEgetLeft(n);
+	right = BTNODEgetRight(n);
+	if(left != NULL) {
+		postorder(toString, left);
+	}
+	if(right != NULL) {
+		postorder(toString, right);
+	}
+	printf("%s\n", toString(BTNODEgetData(n)));
 }
 
 
@@ -118,7 +150,6 @@ void BSTinsert(BST t, void *data) {
 	
 }
 
-//TODO add function that returns string from data as a parameter for the print methods
 
 void BSTprintInorder(char * (*toString)(void *), BST t) {
 	if(t->head == NULL) {
